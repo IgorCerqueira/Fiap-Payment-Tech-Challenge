@@ -19,7 +19,7 @@ export class PaymentService {
 
   async create(createPaymentDTO: CreatePaymentDTO) {
     const entityManager = this.paymentModelRepository.manager; // Obter o EntityManager
-
+    console.log("fewjfewifjewi");
     return entityManager.transaction(async (transactionalEntityManager) => {
       try {
         const createdOrder = await this.orderService
