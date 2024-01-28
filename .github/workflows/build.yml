@@ -34,8 +34,6 @@ jobs:
         run: |
           yarn test:cov
 
-      - name: List directory contents
-        run: ls
 
     
       - name: SonarCloud Scan
