@@ -30,3 +30,5 @@ export class OrderService {
     });
   }
 }
+
+export default OrderService;
