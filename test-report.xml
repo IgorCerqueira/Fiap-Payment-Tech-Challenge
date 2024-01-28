@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+  <file path="C:\Users\Igor\Documents\www\fiap-microservice-pagamento\test\soma.spec.ts">
+    <testCase name="Dummy Test Suite should pass without any assertions" duration="1"/>
+  </file>
+  <file path="C:\Users\Igor\Documents\www\fiap-microservice-pagamento\src\order\service\order.service.spec.ts">
+  </file>
+</testExecutions>

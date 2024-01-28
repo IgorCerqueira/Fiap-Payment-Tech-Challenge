@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { OrderService } from '../order/service/order.service';
-import { CreateOrderDTO } from '../order/dto/order.dto';
+import { OrderService } from './order.service';
+import { CreateOrderDTO } from '../dto/order.dto';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
-import { OrderModel } from '../order/model/order.model';
+import { OrderModel } from '../model/order.model';
 import { Repository } from 'typeorm';
-import { config } from '../database/database.config';
+import { config } from '../../database/database.config';
 
 type MockType<T> = {
   [P in keyof T]?: jest.Mock<object>;
 };
 
 const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(() => ({
-  save: jest.fn((entity) => ({ ...entity, id: 1 })),
+  save: jest.fn((entity) => ({ ...entity, id: 1 }))
 }));
 describe('OrderService', () => {
   let orderService: OrderService;
