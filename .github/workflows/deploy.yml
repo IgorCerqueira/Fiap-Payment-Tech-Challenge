@@ -1,54 +1,44 @@
-name: Deploy to EKS
+name: Build to ECR
 
 on:
-  pull_request:
-    branches: 
+  push:
+    branches:
       - main
-      - master
-    types:
-      - closed
+      - feature/add-sonar
+      - sonar-cloud-testes
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
-  
-  build:
-    
-    name: Pull Image and Deploy on EKS
+  sonarcloud:
+    name: SonarCloud
     runs-on: ubuntu-latest
-   
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          repository: "IgorCerqueira/Fiap-Payment-Tech-Challenge"
+          ref: ${{ github.event.before || github.sha }}
     
-    - name: Check out code
-      uses: actions/checkout@v4
+      - name: Show Node.js and Yarn versions
+        run: |
+          node --version
+          yarn --version
     
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+      - name: Install Dependencies
+        run: |
+          npm install -g yarn
+          yarn install
+    
+      - name: Unit testing
+        run: |
+          yarn test:cov
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v2
-
-    - name: Install and configure kubectl
-      run: |
-        VERSION=$(curl --silent https://storage.googleapis.com/kubernetes-release/release/stable.txt)
-        curl https://storage.googleapis.com/kubernetes-release/release/$VERSION/bin/linux/amd64/kubectl \
-            --progress-bar \
-            --location \
-            --remote-name
-        chmod +x kubectl
-        sudo mv kubectl /usr/local/bin/
-        echo ${{ secrets.KUBECONFIG }} | base64 --decode > kubeconfig.yaml
-
-    - name: Deploy
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: ms-payment
-        IMAGE_TAG: latest
-      run: |
-        export ECR_REPOSITORY=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}
-        export IMAGE_TAG=latest
-        export KUBECONFIG=kubeconfig.yaml
-        kubectl apply -f .k8s/ms-payment/
+      - name: List directory contents
+        run: ls
+    
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
