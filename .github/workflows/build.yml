@@ -14,12 +14,24 @@ jobs:
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Unit testing
+        run: |
+          yarn test:cov
+
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Shallow clones should be disabled for better relevancy of analysis
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+      - name: Run sonar-scanner
+        run: sonar-scanner
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
