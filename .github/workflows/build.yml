@@ -9,43 +9,33 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
-jobs:
-  sonarcloud:
-    name: SonarCloud
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          repository: "IgorCerqueira/Fiap-Payment-Tech-Challenge"
-          ref: ${{ github.event.before || github.sha }}
-
-      - name: Show Node.js and Yarn versions
-        run: |
-          node --version
-          yarn --version
-
-      - name: Install Dependencies
-        run: |
-          npm install -g yarn
-          yarn install
-
-      - name: Unit testing
-        run: |
-          yarn test:cov
-
-
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      - name: Run sonar-scanner
-        run: |
-          npm install sonarqube-scanner -g  
-          sonar-scanner
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    jobs:
+      sonarcloud:
+        name: SonarCloud
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout Repository
+            uses: actions/checkout@v3
+            with:
+              repository: "seu-nome-de-usuario/Fiap-Payment-Tech-Challenge"
+              ref: ${{ github.event.before || github.sha }}
+    
+          - name: Show Node.js and Yarn versions
+            run: |
+              node --version
+              yarn --version
+    
+          - name: Install Dependencies
+            run: |
+              npm install -g yarn
+              yarn install
+    
+          - name: Unit testing
+            run: |
+              yarn test:cov
+    
+          - name: SonarCloud Scan
+            uses: SonarSource/sonarcloud-github-action@master
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+              SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
