@@ -14,8 +14,15 @@ jobs:
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
+      - name: Show Node.js and Yarn versions
+        run: |
+          node --version
+          yarn --version
+
       - name: Install Dependencies
-        run: yarn install
+        run: |
+          npm install -g yarn
+          yarn install
 
       - name: Unit testing
         run: |
