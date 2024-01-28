@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - feature/add-sonar
+      - sonar-cloud-testes
   pull_request:
     types: [opened, synchronize, reopened]
 
