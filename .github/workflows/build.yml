@@ -14,6 +14,13 @@ jobs:
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          repository: "IgorCerqueira/Fiap-Payment-Tech-Challenge"
+          ref: ${{ github.event.before || github.sha }}
+
       - name: Show Node.js and Yarn versions
         run: |
           node --version
@@ -28,9 +35,7 @@ jobs:
         run: |
           yarn test:cov
 
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for better relevancy of analysis
+
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
